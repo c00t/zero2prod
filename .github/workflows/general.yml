@@ -1,4 +1,4 @@
-name: Rust
+name: Rust General Check
 
 on: [push, pull_request]
 
