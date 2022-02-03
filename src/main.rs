@@ -8,8 +8,8 @@ async fn greet(req: HttpRequest) -> impl Responder {
 async fn heath_check() -> impl Responder {
     HttpResponse::Ok()
 }
-
-#[actix_web::main]
+// use `cargo expand` to see expanded macros.
+#[tokio::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
@@ -17,7 +17,7 @@ async fn main() -> std::io::Result<()> {
             //.route("/{name}", web::get().to(greet))
             .route("/heath_check", web::get().to(heath_check))
     })
-        .bind(("127.0.0.1", 8080))?
+    .bind(("127.0.0.1", 8080))?
     .run()
     .await
 }
