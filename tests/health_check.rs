@@ -10,7 +10,7 @@ async fn health_check_works() {
     let client = reqwest::Client::new();
     // send request to our server
     let response = client
-        .get(format!("http://{}/health_check",address)) // 使用&还是不用&都可以把，感觉没什么关系，毕竟后面也没用了
+        .get(format!("http://{}/health_check", address)) // 使用&还是不用&都可以把，感觉没什么关系，毕竟后面也没用了
         .send()
         .await
         .expect("Failed to send an request to `health_check`.");
@@ -23,34 +23,34 @@ async fn health_check_works() {
 }
 
 #[tokio::test]
-async fn subscribe_return_a_200_for_vaild_form_data(){
+async fn subscribe_return_a_200_for_vaild_form_data() {
     let address = spawn_app();
     let client = reqwest::Client::new();
     let body = "name=le%20guin&email=ursula_le_guin%40gmail.com";
     let response = client
-        .post(format!("http://{}/subscriptions",address))
-        .header("Content-Type","application/x-www-form-urlencoded")
+        .post(format!("http://{}/subscriptions", address))
+        .header("Content-Type", "application/x-www-form-urlencoded")
         .body(body)
         .send()
         .await
         .expect("Failed to send request.");
 
-    assert_eq!(response.status().as_u16(),200);
+    assert_eq!(response.status().as_u16(), 200);
 }
 
 #[tokio::test]
-async fn subscribe_return_a_400_for_missing_form_data(){
+async fn subscribe_return_a_400_for_missing_form_data() {
     let address = spawn_app();
     let client = reqwest::Client::new();
     let testcases = vec![
         ("", "missing both"),
         ("email=ursula_le_guin%40gmail.com", "missing name"),
-        ("name=le%20guin", "missing email")
+        ("name=le%20guin", "missing email"),
     ];
-    for (invalid_data, invalid_msg) in testcases{
+    for (invalid_data, invalid_msg) in testcases {
         let response = client
-            .post(format!("http://{}/subscriptions",address))
-            .header("Content-Type","application/x-www-form-urlencoded")
+            .post(format!("http://{}/subscriptions", address))
+            .header("Content-Type", "application/x-www-form-urlencoded")
             .body(invalid_data)
             .send()
             .await
@@ -72,5 +72,5 @@ fn spawn_app() -> String {
     let port = listener.local_addr().unwrap().port();
     let server = zero2prod::run(listener).expect("Failed to bind address.");
     let _ = tokio::spawn(server);
-    format!("127.0.0.1:{}",port)
+    format!("127.0.0.1:{}", port)
 }
